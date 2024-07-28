@@ -2,16 +2,16 @@ import { Context } from 'hono'
 import { response } from '../config/response'
 import { transactionDetails } from '../lib/transactionDetails'
 import { snap } from '../lib/snapMidtrans'
-import { v4 as uuidv4 } from 'uuid'
 import { requestClient } from '../lib/reqClientSide'
+import { generateUniqueId } from '../lib/generateId'
 
 const sendRequestTransaction = async (
 	id_produk: string,
 	username: string,
-	email: string
+	email: string,
+	orderID: string
 ) => {
 	try {
-		const orderID: string = uuidv4()
 		const data = {
 			transaction_details: {
 				order_id: orderID,
@@ -47,6 +47,7 @@ const sendRequestTransaction = async (
 
 export const createPayment = async (c: Context) => {
 	try {
+		const orderID: string = generateUniqueId()
 		const clientData = await c.req.json()
 		const { error, value } = requestClient.validate(clientData)
 		if (error) {
@@ -56,11 +57,13 @@ export const createPayment = async (c: Context) => {
 		const urlPayment = await sendRequestTransaction(
 			value.id_produk,
 			value.username,
-			value.email
+			value.email,
+			orderID
 		)
 		return response(c, false, 201, 'Payment Created', {
 			token: urlPayment.token,
 			url_payment: urlPayment.redirect_url,
+			orderID,
 		})
 	} catch (error) {
 		console.error(error)

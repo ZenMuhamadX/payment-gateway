@@ -17,11 +17,11 @@ import { response } from './config/response'
 const app = new Hono()
 
 // Middleware
+app.use('*', cors())
 app.use('*', csrf())
 app.use('*', Logger)
 app.use('*', secureHeaders())
 app.use('*', prettyJSON())
-app.use('*', cors())
 
 // Route
 app.route('/', index)
