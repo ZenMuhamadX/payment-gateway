@@ -1,5 +1,21 @@
+// Validasi Data
+
+// Module
 import Joi from 'joi'
 
+// Instansi
+export const validPayloadJwt = Joi.object({
+	username: Joi.string().required(),
+	server: Joi.string().required(),
+})
+// Request Client Side
+export const requestClient = Joi.object({
+	id_produk: Joi.string().required(),
+	username: Joi.string().required(),
+	email: Joi.string().email().required(),
+})
+
+// Detail Transaction
 export const transactionDetails = Joi.object({
 	transaction_details: Joi.object({
 		order_id: Joi.string().required(),

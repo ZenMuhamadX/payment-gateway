@@ -1,3 +1,5 @@
+// for Logging
+
 import { Context, Next } from 'hono'
 import chalk from 'chalk'
 
@@ -23,7 +25,7 @@ export const Logger = async (c: Context, next: Next) => {
 	const start = Date.now()
 	await next()
 	const ms = Date.now() - start
-	const { method, url } = c.req
+	const { method, path } = c.req
 	const status = c.res.status
 	// Tentukan warna berdasarkan status kode
 	let statusColor
@@ -41,6 +43,6 @@ export const Logger = async (c: Context, next: Next) => {
 	console.log(
 		`[${new Date().toISOString()}] ${getMethodColor(
 			method
-		)} ${url} - ${statusColor} - ${ms}ms`
+		)} ${path} - ${statusColor} - ${ms}ms`
 	)
 }
