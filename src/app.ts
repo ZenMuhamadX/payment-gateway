@@ -8,7 +8,8 @@ import { prettyJSON } from 'hono/pretty-json'
 import { secureHeaders } from 'hono/secure-headers'
 import { csrf } from 'hono/csrf'
 import { requestId } from 'hono/request-id'
-import { logger } from 'hono/logger'
+// import { logger } from 'hono/logger'
+import { logger } from './middleware/logger.mid'
 
 // routing module
 import index from './route'
@@ -19,10 +20,10 @@ import createJwt from './route/createJwt'
 const app = new Hono()
 
 // Use Middleware
-app.use(cors())
+app.use('*', cors({ origin: '*' }))
 app.use(csrf())
 app.use(secureHeaders())
-app.use(logger())
+app.use(logger)
 app.use(requestId())
 app.use(prettyJSON())
 
