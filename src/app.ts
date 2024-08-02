@@ -6,9 +6,9 @@ import { response } from './config/response'
 import { cors } from 'hono/cors'
 import { prettyJSON } from 'hono/pretty-json'
 import { secureHeaders } from 'hono/secure-headers'
-import { Logger } from './middleware/logging'
 import { csrf } from 'hono/csrf'
 import { requestId } from 'hono/request-id'
+import { logger } from 'hono/logger'
 
 // routing module
 import index from './route'
@@ -22,7 +22,7 @@ const app = new Hono()
 app.use(cors())
 app.use(csrf())
 app.use(secureHeaders())
-app.use(Logger)
+app.use(logger())
 app.use(requestId())
 app.use(prettyJSON())
 

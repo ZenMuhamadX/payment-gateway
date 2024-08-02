@@ -1,9 +1,6 @@
-// Running Server
-import { serve } from 'bun'
+import { serve } from '@hono/node-server'
 import app from './app'
-
-const start = () => {
-	serve(app)
-	console.log('Running http://localhost:2500')
-}
-start()
+// Running Server
+serve(app, () => {
+	console.log('running http://localhost:2500')
+})
