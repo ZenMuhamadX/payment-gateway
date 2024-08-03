@@ -20,7 +20,10 @@ import createJwt from './route/createJwt'
 const app = new Hono()
 
 // Use Middleware
-app.use('*', cors({ origin: '*' }))
+app.use('*', cors({
+  origin: '*', // Mengizinkan semua asal
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Metode HTTP yang diizinkan
+}));
 app.use(csrf())
 app.use(secureHeaders())
 app.use(logger)
