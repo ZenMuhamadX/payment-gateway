@@ -13,6 +13,8 @@ const verifyMidtransSignature = async (c: Context) => {
 		return response(c, 'Signature key is required', 400, 'Bad request', null)
 	const body = await c.req.json()
 
+	console.log(signatureKey)
+
 	// Generate signature hash
 	const hash = crypto
 		.createHmac('sha512', MIDTRANS_SERVER_KEY)
