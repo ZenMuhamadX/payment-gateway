@@ -72,9 +72,6 @@ export const createPayment = async (c: Context) => {
 			value.email
 		)
 
-		const statusTransaction = await snap.transaction.status(urlPayment?.token)
-		console.log(statusTransaction)
-
 		// Periksa hasil dari sendRequestTransaction
 		if (!urlPayment || !urlPayment.token || !urlPayment.redirect_url) {
 			console.error('Payment creation failed: Invalid response')
