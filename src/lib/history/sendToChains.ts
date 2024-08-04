@@ -1,51 +1,10 @@
 import axios from 'axios'
 
-interface data {
-	orderID: string
-	idProduk: string
-	username: string
-	email: string
-	GROSS_AMOUNT: number
-	ITEM_PRICE: number
-	ITEM_QUANTITY: number
-	BRAND: string
-	ITEM_NAME: string
-	MERCHANT_NAME: string
-}
-
-export const sendTxData = (Tx: data) => {
-	const {
-		orderID,
-		idProduk,
-		username,
-		email,
-		GROSS_AMOUNT,
-		ITEM_PRICE,
-		ITEM_QUANTITY,
-		BRAND,
-		ITEM_NAME,
-		MERCHANT_NAME,
-	} = Tx
-
+export const sendTxData = (Tx: object) => {
 	try {
 		const data = {
-			transaction_details: {
-				order_id: orderID,
-				gross_amount: GROSS_AMOUNT,
-			},
-			item_details: [
-				{
-					id: idProduk,
-					price: ITEM_PRICE,
-					quantity: ITEM_QUANTITY,
-					brand: BRAND,
-					name: ITEM_NAME,
-					merchant_name: MERCHANT_NAME,
-				},
-			],
-			customer_details: {
-				first_name: username,
-				email: email,
+			data: {
+				...Tx,
 			},
 		}
 		const response = sendTxToChain(data)
@@ -55,7 +14,7 @@ export const sendTxData = (Tx: data) => {
 			status: 'Success added to chains',
 		}
 	} catch (error) {
-		console.error(error);
+		console.error(error)
 		throw error
 	}
 }

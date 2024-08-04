@@ -2,6 +2,9 @@ import { Context } from 'hono'
 import { response } from '../../config/response'
 import { MidtransWebhookPayload } from '../../interface/inf'
 import { validateMidtransSignature } from '../../lib/verifyHooks/verifyHook'
+import { sendTxData } from '../../lib/history/sendToChains'
+
+const serverKey = process.env.MIDTRANS_SERVER_KEY
 
 export const handleWebhook = async (c: Context) => {
 	try {
@@ -16,7 +19,15 @@ export const handleWebhook = async (c: Context) => {
 		})
 
 		if (isSignatureValid) {
-			console.log(isSignatureValid);
+			sendTxData({
+				serverKey,
+				signatureKey,
+				orderId: payload.order_id,
+				transactionId: payload.transaction_status,
+				time: payload.transaction_time,
+				transactionStatus: payload.transaction_status,
+				grossAmount: payload.gross_amount,
+			})
 			return response(c, null, 200, 'Webhook Verified', { signatureKey })
 		} else {
 			return response(c, null, 400, 'Webhook Not Verified')
