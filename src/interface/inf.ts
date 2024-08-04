@@ -65,10 +65,3 @@ export interface MidtransWebhookPayload {
 	fraud_status: string
 	currency: string
 }
-
-export interface MidtransSignatureValidationPayload {
-	signatureKey: string
-	orderId: string
-	statusCode: string
-	grossAmount: string
-}
