@@ -1,14 +1,14 @@
 // endpoint
 
 import { Hono } from 'hono'
-import { createPayment } from '../controllers/payment/transaction.c'
+import { handleCreatePayment } from '../controllers/payment/transaction.c'
 import { middlewareVerifyJwt } from '../middleware/verifyJwt.mid'
 import { contentTypeHeaders } from '../middleware/headers'
-import { checkStatusPayment } from '../controllers/payment/checkPaymentStatus.c'
+import { handleCheckStatusPayment } from '../controllers/payment/checkPaymentStatus.c'
 const route = new Hono()
 
 // validasi ketat untuk pembayaran
-route.post('/', contentTypeHeaders, middlewareVerifyJwt, createPayment)
-route.get('/', checkStatusPayment)
+route.post('/', contentTypeHeaders, middlewareVerifyJwt, handleCreatePayment)
+route.get('/', handleCheckStatusPayment)
 
 export default route

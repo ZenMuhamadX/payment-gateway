@@ -1,9 +1,9 @@
 // endpoint
 
 import { Hono } from 'hono'
-import { createJwt } from '../controllers/JWT/createJwt'
+import { handleCreateJwt } from '../controllers/JWT/createJwt'
 const route = new Hono({ strict: true })
 
-route.post('/', createJwt)
+route.post('/', handleCreateJwt)
 
 export default route

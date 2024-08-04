@@ -15,7 +15,7 @@ interface JwtPayload {
 //
 
 // Fungsi membuat Jwt
-export const createJwt = async (c: Context) => {
+export const handleCreateJwt = async (c: Context) => {
 	// Validasi
 	try {
 		// Validasi request Body

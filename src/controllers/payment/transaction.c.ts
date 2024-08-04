@@ -5,11 +5,11 @@ import { Context } from 'hono'
 import { response } from '../../config/response'
 import { requestClient } from '../../interface/validateInf'
 import { RequestClientData } from '../../interface/inf'
-import { sendRequestTransaction } from './requestTransaction.c'
+import { handleSendRequestTransaction } from './requestTransaction.c'
 //
 
 // Buat pembayaran
-export const createPayment = async (c: Context) => {
+export const handleCreatePayment = async (c: Context) => {
 	try {
 		// Menangani parsing JSON dengan hati-hati
 		let clientData: RequestClientData
@@ -36,7 +36,7 @@ export const createPayment = async (c: Context) => {
 		//
 
 		// Kirim permintaan transaksi
-		const urlPayment = await sendRequestTransaction(
+		const urlPayment = await handleSendRequestTransaction(
 			value.id_produk,
 			value.username,
 			value.email
