@@ -7,7 +7,7 @@ export const sendTxData = (Tx: object) => {
 				...Tx,
 			},
 		}
-		const response = sendTxToChain({ data })
+		const response = sendTxToChain(data)
 		return {
 			data,
 			response,
