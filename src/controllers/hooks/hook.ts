@@ -22,10 +22,12 @@ interface hookFromMidtrans {
 export const webHook = async (c: Context) => {
 	const hookBody: hookFromMidtrans = await c.req.json()
 	const signatureHook = hookBody.signature_key
-	const verifySignature = crypto.SHA512(
-		`${hookBody.order_id}${hookBody.status_code}${hookBody.gross_amount}${serverKey}`
-	)
-	if (signatureHook === verifySignature.toString()) {
+	const verifySignature = crypto
+		.SHA512(
+			`${hookBody.order_id}${hookBody.status_code}${hookBody.gross_amount}${serverKey}`
+		)
+		.toString()
+	if (signatureHook === verifySignature) {
 		console.log('Signature verified')
 	}
 	console.log({ verifySignature })
