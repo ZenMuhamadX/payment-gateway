@@ -4,7 +4,7 @@ import { snap } from '../../lib/payment/snap.lib'
 import { response } from '../../config/response'
 import { toStatusCode } from '../../lib/payment/convertToStatusCode'
 
-export const checkStatusPayment = async (c: Context) => {
+export const handleCheckStatusPayment = async (c: Context) => {
 	// Mengambil order ID dari query parameter.
 	const { orderID } = c.req.query()
 

@@ -1,36 +1,49 @@
+import crypto from 'crypto'
 import { Context } from 'hono'
 import { response } from '../../config/response'
-const serverKey = process.env.MIDTRANS_SERVER_KEY
-import crypto from 'crypto-js'
+import { MidtransSignatureValidationPayload, MidtransWebhookPayload } from '../../interface/inf'
+import { webhookSchema } from '../../interface/validateInf'
 
-interface hookFromMidtrans {
-	transaction_time: string
-	transaction_status: string
-	transaction_id: string
-	status_message: string
-	status_code: string
-	signature_key: string
-	settlement_time: string
-	payment_type: string
-	order_id: string
-	merchant_id: string
-	gross_amount: string
-	fraud_status: string
-	currency: string
+export const handleWebhook = async (ctx: Context) => {
+	try {
+		const payload: MidtransWebhookPayload = await ctx.req.json()
+
+		// Validasi data menggunakan Joi
+		const { error } = webhookSchema.validate(payload)
+		if (error) {
+			return response(ctx, error.message, 400, 'Bad Request', null)
+		}
+
+		const signatureKey = payload.signature_key
+		const isSignatureValid = validateMidtransSignature({
+			signatureKey,
+			orderId: payload.order_id,
+			statusCode: payload.status_code,
+			grossAmount: payload.gross_amount,
+		})
+
+		if (isSignatureValid) {
+			return response(ctx, null, 200, 'Webhook Verified', { signatureKey })
+		} else {
+			return response(ctx, null, 400, 'Webhook Not Verified')
+		}
+	} catch (error) {
+		console.error('Error in handleWebhook:', error)
+		return response(ctx, null, 500, 'Internal Server Error', null)
+	}
 }
 
-export const webHook = async (c: Context) => {
-	const hookBody: hookFromMidtrans = await c.req.json()
-	const signatureHook = hookBody.signature_key
-	const verifySignature = crypto
-		.SHA512(
-			`${hookBody.order_id}${hookBody.status_code}${hookBody.gross_amount}${serverKey}`
-		)
-		.toString()
-	if (signatureHook === verifySignature) {
-		console.log('Signature verified')
-	}
-	console.log({ verifySignature })
-	console.log({ signatureHook })
-	return response(c, null, 200, 'Hooks recived', { hooks: hookBody })
+// Fungsi untuk memverifikasi tanda tangan dari Midtrans
+
+const validateMidtransSignature = (
+	payload: MidtransSignatureValidationPayload
+) => {
+	const serverKey = process.env.MIDTRANS_SERVER_KEY!
+	const { signatureKey, orderId, statusCode, grossAmount } = payload
+	const computedSignature = crypto
+		.createHash('sha512')
+		.update(`${orderId}${statusCode}${grossAmount}${serverKey}`)
+		.digest('hex')
+
+	return signatureKey === computedSignature
 }

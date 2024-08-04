@@ -29,7 +29,7 @@ interface ResponseTransaction {
 }
 
 // Fungsi request transaksi
-export const sendRequestTransaction = async (
+export const handleSendRequestTransaction = async (
 	idProduk: string,
 	username: string,
 	email: string
