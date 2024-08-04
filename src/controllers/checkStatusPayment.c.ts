@@ -1,6 +1,14 @@
 import { Context } from 'hono'
 import { snap } from '../lib/snap.lib'
 import { response } from '../config/response'
+import { StatusCode } from 'hono/utils/http-status'
+
+interface MidtransError extends Error {
+	ApiResponse: {
+		status_code: StatusCode
+		status_message: string
+	}
+}
 
 export const checkStatusPayment = async (c: Context) => {
 	// Mengambil order ID dari query parameter.
@@ -27,7 +35,14 @@ export const checkStatusPayment = async (c: Context) => {
 		return response(c, null, 200, 'Success', statusTx)
 	} catch (error) {
 		if (error instanceof Error) {
-			return response(c, error.ApiResponse, 404, 'Bad Request', null)
+			const midtransErr = error as MidtransError
+			return response(
+				c,
+				midtransErr.ApiResponse.status_message,
+				midtransErr.ApiResponse.status_code,
+				'Bad Request',
+				null
+			)
 		}
 		console.error(error)
 		return response(c, null, 500, 'Internal Server Error', null)
