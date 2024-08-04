@@ -37,13 +37,15 @@ export const checkStatusPayment = async (c: Context) => {
 	} catch (error) {
 		if (error instanceof Error) {
 			const midtransErr = error as MidtransError
-			const statusCodeMidtrans = toStatusCode(midtransErr.httpStatusCode.toString())
+			const statusCodeMidtrans = toStatusCode(
+				midtransErr.httpStatusCode.toString()
+			)
 			return response(
 				c,
-				midtransErr.ApiResponse.status_message,
+				`Complete payment and try again or contact support. Error: ${midtransErr.ApiResponse.status_message}`,
 				statusCodeMidtrans,
 				'Bad Request',
-				{ statusCodeMidtrans }
+				null
 			)
 		}
 		console.log('error')
