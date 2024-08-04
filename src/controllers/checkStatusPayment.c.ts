@@ -27,7 +27,7 @@ export const checkStatusPayment = async (c: Context) => {
 		return response(c, null, 200, 'Success', statusTx)
 	} catch (error) {
 		if (error instanceof Error) {
-			return response(c, error.message, 404, 'Bad Request', null)
+			return response(c, error.ApiResponse, 404, 'Bad Request', null)
 		}
 		console.error(error)
 		return response(c, null, 500, 'Internal Server Error', null)
