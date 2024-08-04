@@ -1,5 +1,7 @@
 import { Context } from 'hono'
 import { response } from '../../config/response'
+const serverKey = process.env.MIDTRANS_SERVER_KEY
+import crypto from 'crypto-js'
 
 interface hookFromMidtrans {
 	transaction_time: string
@@ -19,6 +21,14 @@ interface hookFromMidtrans {
 
 export const webHook = async (c: Context) => {
 	const hookBody: hookFromMidtrans = await c.req.json()
-	console.log(hookBody)
-	return response(c, null, 200, 'Hooks recived', { hooks:hookBody })
+	const signatureHook = hookBody.signature_key
+	const verifySignature = crypto.SHA512(
+		`${hookBody.order_id}${hookBody.status_code}${hookBody.gross_amount}${serverKey}`
+	)
+	if (signatureHook === verifySignature.toString()) {
+		console.log('Signature verified')
+	}
+	console.log({ verifySignature })
+	console.log({ signatureHook })
+	return response(c, null, 200, 'Hooks recived', { hooks: hookBody })
 }
