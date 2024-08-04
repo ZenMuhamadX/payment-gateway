@@ -1,7 +1,10 @@
 import crypto from 'crypto'
 import { Context } from 'hono'
 import { response } from '../../config/response'
-import { MidtransSignatureValidationPayload, MidtransWebhookPayload } from '../../interface/inf'
+import {
+	MidtransSignatureValidationPayload,
+	MidtransWebhookPayload,
+} from '../../interface/inf'
 import { webhookSchema } from '../../interface/validateInf'
 
 export const handleWebhook = async (ctx: Context) => {
@@ -21,6 +24,9 @@ export const handleWebhook = async (ctx: Context) => {
 			statusCode: payload.status_code,
 			grossAmount: payload.gross_amount,
 		})
+
+		console.log(isSignatureValid)
+		return response(ctx, null, 200, 'Webhook Verified', { signatureKey })
 
 		if (isSignatureValid) {
 			return response(ctx, null, 200, 'Webhook Verified', { signatureKey })
