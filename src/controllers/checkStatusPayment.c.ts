@@ -36,7 +36,7 @@ export const checkStatusPayment = async (c: Context) => {
 	} catch (error) {
 		if (error instanceof Error) {
 			const midtransErr = error as MidtransError
-			const statusCodeMidtrans = midtransErr.httpStatusCode
+			const statusCodeMidtrans = midtransErr.rawHttpClientData
 			return response(
 				c,
 				midtransErr.ApiResponse.status_message,
