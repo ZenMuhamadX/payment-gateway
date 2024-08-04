@@ -7,6 +7,7 @@ import { requestClient } from '../interface/validateInf'
 import { generateUniqueId } from '../lib/generateId.lib'
 import { RequestClientData } from '../interface/inf'
 import { sendRequestTransaction } from './requestTransaction.c'
+import { snap } from '../lib/snap.lib'
 //
 
 // Konstanta untuk status kode dan pesan
@@ -22,8 +23,6 @@ const MSG_INTERNAL_SERVER_ERROR = 'Internal Server Error'
 // Buat pembayaran
 export const createPayment = async (c: Context) => {
 	try {
-		const orderID = generateUniqueId()
-
 		// Menangani parsing JSON dengan hati-hati
 		let clientData: RequestClientData
 		try {
@@ -70,9 +69,11 @@ export const createPayment = async (c: Context) => {
 		const urlPayment = await sendRequestTransaction(
 			value.id_produk,
 			value.username,
-			value.email,
-			orderID
+			value.email
 		)
+
+		const statusTransaction = await snap.transaction.status(urlPayment?.orderID)
+		console.log(statusTransaction)
 
 		// Periksa hasil dari sendRequestTransaction
 		if (!urlPayment || !urlPayment.token || !urlPayment.redirect_url) {
@@ -86,25 +87,9 @@ export const createPayment = async (c: Context) => {
 			)
 		}
 
-		// const bodyChain = {
-		// 	data: {
-		// 		orderID: orderID,
-		// 		id_produk: value.id_produk,
-		// 		username: value.username,
-		// 		email: value.email,
-		// 	},
-		// }
-
-		// const sendToBlockchains = async () => {
-		// 	await fetch('http://localhost:3000/blockchain', {
-		// 		method: 'POST',
-		// 		body: JSON.stringify(bodyChain),
-		// 	})
-		// }
-		// sendToBlockchains()
 		// Berhasil membuat pembayaran
 		return response(c, null, STATUS_CODE_CREATED, MSG_PAYMENT_CREATED, {
-			orderID,
+			orderID: urlPayment.orderID,
 			token: urlPayment.token,
 			url_payment: urlPayment.redirect_url,
 		})

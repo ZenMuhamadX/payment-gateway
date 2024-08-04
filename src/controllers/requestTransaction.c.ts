@@ -5,6 +5,7 @@
 import { transactionDetails } from '../interface/validateInf'
 import { TransactionData } from '../interface/inf'
 import { snap } from '../lib/snap.lib'
+import { generateUniqueId } from '../lib/generateId.lib'
 //
 
 // Konstanta untuk nilai tetap yang akan diambil dari database
@@ -17,6 +18,7 @@ const MERCHANT_NAME = 'Midtrans'
 //
 
 interface responseTransaction {
+	orderID: string
 	token: string
 	redirect_url: string
 }
@@ -25,9 +27,9 @@ interface responseTransaction {
 export const sendRequestTransaction = async (
 	idProduk: string,
 	username: string,
-	email: string,
-	orderID: string
+	email: string
 ): Promise<responseTransaction | null> => {
+	const orderID = generateUniqueId()
 	try {
 		// Mendefinisikan data transaksi (akan diambil dari database)
 		const txData: TransactionData = {
@@ -64,7 +66,7 @@ export const sendRequestTransaction = async (
 		const transaction = await snap.createTransaction(value)
 		const redirect_url = transaction.redirect_url
 		const token = transaction.token
-		return { token, redirect_url }
+		return { token, redirect_url, orderID }
 		//
 
 		// Penanganan error
