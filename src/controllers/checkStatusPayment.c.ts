@@ -5,9 +5,9 @@ import { StatusCode } from 'hono/utils/http-status'
 
 interface MidtransError extends Error {
 	ApiResponse: {
-		status_code: StatusCode
 		status_message: string
 	}
+	httpStatusCode: StatusCode
 }
 
 export const checkStatusPayment = async (c: Context) => {
@@ -39,7 +39,7 @@ export const checkStatusPayment = async (c: Context) => {
 			return response(
 				c,
 				midtransErr.ApiResponse.status_message,
-				midtransErr.ApiResponse.status_code,
+				midtransErr.httpStatusCode,
 				'Bad Request',
 				null
 			)
