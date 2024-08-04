@@ -30,7 +30,8 @@ route.post('/', async (c: Context) => {
 		return c.json({ error: 'Invalid signature' }, 403)
 	}
 
-console.log(verifyMidtransSignature(c));
+	const valid = await verifyMidtransSignature(c)
+	console.log(valid)
 
 	// Ambil payload dari request body
 	const payload = await c.req.json()
