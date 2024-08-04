@@ -1,15 +1,5 @@
 import { Context } from 'hono'
-import {
-	blue,
-	green,
-	yellow,
-	red,
-	magenta,
-	cyan,
-	gray,
-	white,
-	reset,
-} from 'colorette'
+import { blue, green, yellow, red, magenta, cyan, gray, white } from 'colorette'
 
 // Pemetaan warna untuk metode HTTP
 const methodColors: { [key: string]: (text: string) => string } = {

@@ -1,7 +1,7 @@
 // Request Transaksi
 
 // Module
-import { db } from '../config/db'
+// import { db } from '../config/db'
 import { transactionDetails } from '../interface/validateInf'
 import { TransactionData } from '../interface/inf'
 import { snap } from '../lib/snap.lib'
@@ -16,13 +16,18 @@ const ITEM_NAME = 'Midtrans Bear'
 const MERCHANT_NAME = 'Midtrans'
 //
 
+interface responseTransaction {
+	token: string
+	redirect_url: string
+}
+
 // Fungsi request transaksi
 export const sendRequestTransaction = async (
 	idProduk: string,
 	username: string,
 	email: string,
 	orderID: string
-): Promise<any | null> => {
+): Promise<responseTransaction | null> => {
 	try {
 		// Mendefinisikan data transaksi (akan diambil dari database)
 		const txData: TransactionData = {
@@ -57,7 +62,9 @@ export const sendRequestTransaction = async (
 
 		// Buat transaksi
 		const transaction = await snap.createTransaction(value)
-		return transaction
+		const redirect_url = transaction.redirect_url
+		const token = transaction.token
+		return { token, redirect_url }
 		//
 
 		// Penanganan error

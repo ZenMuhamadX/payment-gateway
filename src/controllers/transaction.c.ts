@@ -29,6 +29,7 @@ export const createPayment = async (c: Context) => {
 		try {
 			clientData = (await c.req.json()) as RequestClientData
 		} catch (parseError) {
+			console.error(parseError)
 			return response(
 				c,
 				MSG_INVALID_JSON,
@@ -85,14 +86,14 @@ export const createPayment = async (c: Context) => {
 			)
 		}
 
-		const bodyChain = {
-			data: {
-				orderID: orderID,
-				id_produk: value.id_produk,
-				username: value.username,
-				email: value.email,
-			},
-		}
+		// const bodyChain = {
+		// 	data: {
+		// 		orderID: orderID,
+		// 		id_produk: value.id_produk,
+		// 		username: value.username,
+		// 		email: value.email,
+		// 	},
+		// }
 
 		// const sendToBlockchains = async () => {
 		// 	await fetch('http://localhost:3000/blockchain', {
