@@ -15,15 +15,19 @@ import { logger } from './middleware/logger.mid'
 import index from './route'
 import createPayment from './route/transaction'
 import createJwt from './route/createJwt'
+import hooks from './route/hooks'
 
 // Instansi app
 const app = new Hono()
 
 // Use Middleware
-app.use('*', cors({
-  origin: '*', // Mengizinkan semua asal
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Metode HTTP yang diizinkan
-}));
+app.use(
+	'*',
+	cors({
+		origin: '*', // Mengizinkan semua asal
+		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Metode HTTP yang diizinkan
+	})
+)
 app.use(csrf())
 app.use(secureHeaders())
 app.use(logger)
@@ -32,6 +36,7 @@ app.use(prettyJSON())
 
 // Path Route
 app.route('/', index)
+app.route('/v1/hooks', hooks)
 app.route('/v1/token', createJwt)
 app.route('/v1/transaction', createPayment)
 

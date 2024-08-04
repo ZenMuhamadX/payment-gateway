@@ -2,7 +2,7 @@
 
 import { Context, Next } from 'hono'
 import { response } from '../config/response'
-import { verifyJwt } from '../lib/verifyJwt.lib'
+import { verifyJwt } from '../lib/JWT/verifyJwt.lib'
 
 export const middlewareVerifyJwt = async (c: Context, next: Next) => {
 	try {

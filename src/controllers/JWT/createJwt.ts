@@ -2,9 +2,9 @@
 
 // Module
 import { Context } from 'hono'
-import { response } from '../config/response'
-import { validPayloadJwt } from '../interface/validateInf'
-import { signJwt } from '../lib/signJwt.lib'
+import { response } from '../../config/response'
+import { validPayloadJwt } from '../../interface/validateInf'
+import { signJwt } from '../../lib/JWT/signJwt.lib'
 //
 
 // Interface Payload

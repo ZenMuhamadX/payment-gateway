@@ -1,3 +1,5 @@
+import { StatusCode } from 'hono/utils/http-status'
+
 // JWT interface
 export interface JwtVerificationResult {
 	error: boolean
@@ -37,4 +39,12 @@ export interface RequestClientData {
 	id_produk: string
 	username: string
 	email: string
+}
+
+// Midtrans Response
+export interface midtransError extends Error {
+	ApiResponse: {
+		status_message: string
+	}
+	httpStatusCode: StatusCode
 }

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { validPayloadJwt } from '../interface/validateInf'
+import { validPayloadJwt } from '../../interface/validateInf'
 
 // Mendapatkan kunci rahasia dari environment dan memastikan keberadaannya
 const key: string = process.env.JWT_SECRET_KEY || 'Your_secret_key'
