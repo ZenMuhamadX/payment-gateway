@@ -40,7 +40,7 @@ export const checkStatusPayment = async (c: Context) => {
 			return response(
 				c,
 				midtransErr.ApiResponse.status_message,
-				statusCodeMidtrans,
+				404,
 				'Internal Server Error',
 				null
 			)
