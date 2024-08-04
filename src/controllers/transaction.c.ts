@@ -85,6 +85,22 @@ export const createPayment = async (c: Context) => {
 			)
 		}
 
+		const bodyChain = {
+			data: {
+				orderID: orderID,
+				id_produk: value.id_produk,
+				username: value.username,
+				email: value.email,
+			},
+		}
+
+		// const sendToBlockchains = async () => {
+		// 	await fetch('http://localhost:3000/blockchain', {
+		// 		method: 'POST',
+		// 		body: JSON.stringify(bodyChain),
+		// 	})
+		// }
+		// sendToBlockchains()
 		// Berhasil membuat pembayaran
 		return response(c, null, STATUS_CODE_CREATED, MSG_PAYMENT_CREATED, {
 			orderID,
