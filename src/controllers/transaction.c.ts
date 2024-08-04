@@ -4,10 +4,8 @@
 import { Context } from 'hono'
 import { response } from '../config/response'
 import { requestClient } from '../interface/validateInf'
-import { generateUniqueId } from '../lib/generateId.lib'
 import { RequestClientData } from '../interface/inf'
 import { sendRequestTransaction } from './requestTransaction.c'
-import { snap } from '../lib/snap.lib'
 //
 
 // Konstanta untuk status kode dan pesan
@@ -73,22 +71,25 @@ export const createPayment = async (c: Context) => {
 		)
 
 		// Periksa hasil dari sendRequestTransaction
-		if (!urlPayment || !urlPayment.token || !urlPayment.redirect_url) {
-			console.error('Payment creation failed: Invalid response')
+		if (urlPayment?.error) {
+			console.error(
+				'Payment creation failed: Invalid response',
+				urlPayment.error
+			)
 			return response(
 				c,
-				'Payment creation failed',
-				STATUS_CODE_INTERNAL_SERVER_ERROR,
-				'Internal Server Error',
+				urlPayment.error,
+				STATUS_CODE_BAD_REQUEST,
+				'Bad request',
 				null
 			)
 		}
 
 		// Berhasil membuat pembayaran
 		return response(c, null, STATUS_CODE_CREATED, MSG_PAYMENT_CREATED, {
-			orderID: urlPayment.orderID,
-			token: urlPayment.token,
-			url_payment: urlPayment.redirect_url,
+			orderID: urlPayment?.orderID,
+			token: urlPayment?.token,
+			url_payment: urlPayment?.redirect_url,
 		})
 		//
 

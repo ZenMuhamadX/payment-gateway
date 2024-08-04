@@ -6,6 +6,7 @@ import { transactionDetails } from '../interface/validateInf'
 import { TransactionData } from '../interface/inf'
 import { snap } from '../lib/snap.lib'
 import { generateUniqueId } from '../lib/generateId.lib'
+import { StatusCode } from 'hono/utils/http-status'
 //
 
 // Konstanta untuk nilai tetap yang akan diambil dari database
@@ -17,10 +18,12 @@ const ITEM_NAME = 'Midtrans Bear'
 const MERCHANT_NAME = 'Midtrans'
 //
 
-interface responseTransaction {
-	orderID: string
-	token: string
-	redirect_url: string
+interface ResponseTransaction {
+	orderID?: string
+	token?: string
+	redirect_url?: string
+	error?: string
+	statusCode?: StatusCode
 }
 
 // Fungsi request transaksi
@@ -28,7 +31,7 @@ export const sendRequestTransaction = async (
 	idProduk: string,
 	username: string,
 	email: string
-): Promise<responseTransaction | null> => {
+): Promise<ResponseTransaction | null> => {
 	const orderID = generateUniqueId()
 	try {
 		// Mendefinisikan data transaksi (akan diambil dari database)
@@ -52,27 +55,29 @@ export const sendRequestTransaction = async (
 				email: email,
 			},
 		}
-		//
 
 		// Validasi data transaksi
 		const { value, error } = transactionDetails.validate(txData)
 		if (error) {
 			console.error('Transaction validation failed:', error.message)
-			throw new Error(`Transaction validation error: ${error.message}`)
+			return {
+				error: `Transaction validation error: ${error.message}`,
+				statusCode: 400,
+			}
 		}
-		//
 
 		// Buat transaksi
 		const transaction = await snap.createTransaction(value)
 		const redirect_url = transaction.redirect_url
 		const token = transaction.token
-		return { token, redirect_url, orderID }
-		//
-
-		// Penanganan error
+		return { token, redirect_url, orderID, statusCode: 200 }
 	} catch (error) {
-		console.error('Transaction request failed:', error)
-		return null
+		if (error instanceof Error) {
+			console.error('Transaction request failed:', error.message)
+			return { error: error.message, statusCode: 500 }
+		} else {
+			console.error('Transaction request failed:', error)
+			throw error
+		}
 	}
-	//
 }
