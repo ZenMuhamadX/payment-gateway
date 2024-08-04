@@ -2,20 +2,10 @@
 
 // Module
 import { Context } from 'hono'
-import { response } from '../config/response'
-import { requestClient } from '../interface/validateInf'
-import { RequestClientData } from '../interface/inf'
+import { response } from '../../config/response'
+import { requestClient } from '../../interface/validateInf'
+import { RequestClientData } from '../../interface/inf'
 import { sendRequestTransaction } from './requestTransaction.c'
-//
-
-// Konstanta untuk status kode dan pesan
-const STATUS_CODE_BAD_REQUEST = 400
-const STATUS_CODE_CREATED = 201
-const STATUS_CODE_INTERNAL_SERVER_ERROR = 500
-const MSG_INVALID_JSON = 'Invalid JSON'
-const MSG_REQUEST_BODY_EMPTY = 'Request body is empty'
-const MSG_PAYMENT_CREATED = 'Payment Created'
-const MSG_INTERNAL_SERVER_ERROR = 'Internal Server Error'
 //
 
 // Buat pembayaran
@@ -27,25 +17,13 @@ export const createPayment = async (c: Context) => {
 			clientData = (await c.req.json()) as RequestClientData
 		} catch (parseError) {
 			console.error(parseError)
-			return response(
-				c,
-				MSG_INVALID_JSON,
-				STATUS_CODE_BAD_REQUEST,
-				'Bad Request',
-				null
-			)
+			return response(c, 'Invalid Body JSON', 400, 'Bad Request', null)
 		}
 		//
 
 		// Pastikan ada data yang diterima sebelum validasi
 		if (!clientData || Object.keys(clientData).length === 0) {
-			return response(
-				c,
-				MSG_REQUEST_BODY_EMPTY,
-				STATUS_CODE_BAD_REQUEST,
-				'Bad Request',
-				null
-			)
+			return response(c, 'Body is empty', 400, 'Bad Request', null)
 		}
 		//
 
@@ -53,13 +31,7 @@ export const createPayment = async (c: Context) => {
 		const { error, value } = requestClient.validate(clientData)
 		if (error) {
 			console.error('Validation Error:', error.message)
-			return response(
-				c,
-				error.message,
-				STATUS_CODE_BAD_REQUEST,
-				'Bad Request',
-				null
-			)
+			return response(c, error.message, 400, 'Bad Request', null)
 		}
 		//
 
@@ -76,17 +48,11 @@ export const createPayment = async (c: Context) => {
 				'Payment creation failed: Invalid response',
 				urlPayment.error
 			)
-			return response(
-				c,
-				urlPayment.error,
-				STATUS_CODE_BAD_REQUEST,
-				'Bad request',
-				null
-			)
+			return response(c, urlPayment.error, 400, 'Bad request', null)
 		}
 
 		// Berhasil membuat pembayaran
-		return response(c, null, STATUS_CODE_CREATED, MSG_PAYMENT_CREATED, {
+		return response(c, null, 200, 'Payment Created', {
 			orderID: urlPayment?.orderID,
 			token: urlPayment?.token,
 			url_payment: urlPayment?.redirect_url,
@@ -95,14 +61,11 @@ export const createPayment = async (c: Context) => {
 
 		// Penanganan Error
 	} catch (error) {
+		if (error instanceof Error) {
+			return response(c, error.message, 500, 'Internal Server Error', null)
+		}
 		console.error('Internal Server Error:', error)
-		return response(
-			c,
-			MSG_INTERNAL_SERVER_ERROR,
-			STATUS_CODE_INTERNAL_SERVER_ERROR,
-			'Internal Server Error',
-			null
-		)
+		return response(c, null, 500, 'Internal Server Error', null)
 	}
 	//
 }

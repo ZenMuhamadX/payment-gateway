@@ -2,7 +2,7 @@
 
 // Module
 import jwt from 'jsonwebtoken'
-import { JwtVerificationResult } from '../interface/inf'
+import { JwtVerificationResult } from '../../interface/inf'
 
 // Mendapatkan kunci rahasia dari environment dan memastikan keberadaannya
 const key: string = process.env.JWT_SECRET_KEY || 'default_secret_key'

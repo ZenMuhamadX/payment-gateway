@@ -2,11 +2,13 @@
 
 // Module
 // import { db } from '../config/db'
-import { transactionDetails } from '../interface/validateInf'
-import { TransactionData } from '../interface/inf'
-import { snap } from '../lib/snap.lib'
-import { generateUniqueId } from '../lib/generateId.lib'
+import { transactionDetails } from '../../interface/validateInf'
+import { TransactionData } from '../../interface/inf'
+import { snap } from '../../lib/payment/snap.lib'
+import { generateUniqueId } from '../../lib/id/generateId.lib'
 import { StatusCode } from 'hono/utils/http-status'
+import { midtransError } from '../../interface/inf'
+import { toStatusCode } from '../../lib/payment/convertToStatusCode'
 //
 
 // Konstanta untuk nilai tetap yang akan diambil dari database
@@ -73,8 +75,18 @@ export const sendRequestTransaction = async (
 		return { token, redirect_url, orderID, statusCode: 200 }
 	} catch (error) {
 		if (error instanceof Error) {
-			console.error('Transaction request failed:', error.message)
-			return { error: error.message, statusCode: 500 }
+			const midtransErr = error as midtransError
+			const statusCodeMidtrans: StatusCode = toStatusCode(
+				midtransErr.httpStatusCode.toString()
+			)
+			console.error(
+				'Transaction request failed:',
+				midtransErr.ApiResponse.status_message
+			)
+			return {
+				error: midtransErr.ApiResponse.status_message,
+				statusCode: statusCodeMidtrans,
+			}
 		} else {
 			console.error('Transaction request failed:', error)
 			throw error
