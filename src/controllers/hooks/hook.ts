@@ -16,6 +16,7 @@ export const handleWebhook = async (c: Context) => {
 		})
 
 		if (isSignatureValid) {
+			console.log(isSignatureValid);
 			return response(c, null, 200, 'Webhook Verified', { signatureKey })
 		} else {
 			return response(c, null, 400, 'Webhook Not Verified')

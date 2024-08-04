@@ -16,7 +16,5 @@ export const validateMidtransSignature = (payload: signaturePayload) => {
 		.update(`${orderId}${statusCode}${grossAmount}${serverKey}`)
 		.digest('hex')
 
-	console.log(computedSignature)
-
 	return signatureKey === computedSignature
 }
