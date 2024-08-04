@@ -72,7 +72,7 @@ export const createPayment = async (c: Context) => {
 			value.email
 		)
 
-		const statusTransaction = await snap.transaction.status(urlPayment?.orderID)
+		const statusTransaction = await snap.transaction.status(urlPayment?.token)
 		console.log(statusTransaction)
 
 		// Periksa hasil dari sendRequestTransaction
