@@ -3,14 +3,6 @@
 // Module
 import Joi from 'joi'
 
-// Definisikan skema validasi menggunakan Joi
-export const webhookSchema = Joi.object({
-	signature_key: Joi.string().required(),
-	order_id: Joi.string().required(),
-	status_code: Joi.string().required(),
-	gross_amount: Joi.string().required(),
-})
-
 // Instansi JWT sign
 export const validPayloadJwt = Joi.object({
 	username: Joi.string().required(),
