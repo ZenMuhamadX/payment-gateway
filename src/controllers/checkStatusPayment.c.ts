@@ -2,6 +2,7 @@ import { Context } from 'hono'
 import { snap } from '../lib/snap.lib'
 import { response } from '../config/response'
 import { StatusCode } from 'hono/utils/http-status'
+import { toStatusCode } from '../lib/convertTosStatusCode'
 
 interface MidtransError extends Error {
 	ApiResponse: {
@@ -36,7 +37,7 @@ export const checkStatusPayment = async (c: Context) => {
 	} catch (error) {
 		if (error instanceof Error) {
 			const midtransErr = error as MidtransError
-			const statusCodeMidtrans = Number(midtransErr.httpStatusCode)
+			const statusCodeMidtrans = toStatusCode(midtransErr.httpStatusCode.toString())
 			return response(
 				c,
 				midtransErr.ApiResponse.status_message,
