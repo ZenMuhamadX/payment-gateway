@@ -36,15 +36,16 @@ export const checkStatusPayment = async (c: Context) => {
 	} catch (error) {
 		if (error instanceof Error) {
 			const midtransErr = error as MidtransError
-			console.log(midtransErr.httpStatusCode);
+			const statusCodeMidtrans = midtransErr.httpStatusCode
 			return response(
 				c,
 				midtransErr.ApiResponse.status_message,
-				midtransErr.httpStatusCode,
-				'Bad Request',
+				statusCodeMidtrans,
+				'Internal Server Error',
 				null
 			)
 		}
+		console.log('error')
 		console.error(error)
 		return response(c, null, 500, 'Internal Server Error', null)
 	}
