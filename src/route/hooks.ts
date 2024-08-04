@@ -12,7 +12,6 @@ const verifyMidtransSignature = async (c: Context) => {
 	if (!signatureKey)
 		return response(c, 'Signature key is required', 400, 'Bad request', null)
 	const body = await c.req.json()
-
 	console.log(signatureKey)
 
 	// Generate signature hash
@@ -30,6 +29,8 @@ route.post('/', async (c: Context) => {
 	if (!verifyMidtransSignature(c)) {
 		return c.json({ error: 'Invalid signature' }, 403)
 	}
+
+console.log(verifyMidtransSignature(c));
 
 	// Ambil payload dari request body
 	const payload = await c.req.json()
