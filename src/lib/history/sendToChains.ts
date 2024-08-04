@@ -7,7 +7,7 @@ export const sendTxData = (Tx: object) => {
 				...Tx,
 			},
 		}
-		const response = sendTxToChain(data)
+		const response = sendTxToChain({ data })
 		return {
 			data,
 			response,
@@ -23,9 +23,7 @@ const sendTxToChain = async (dataToChain: object) => {
 	try {
 		const hit = await axios('http://localhost:3000/block', {
 			method: 'POST',
-			data: {
-				dataToChain,
-			},
+			data: JSON.stringify(dataToChain),
 		})
 		const response = await hit.data
 		return response
