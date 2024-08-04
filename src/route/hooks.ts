@@ -1,7 +1,7 @@
 import { Context, Hono } from 'hono'
 import crypto from 'crypto'
 import { response } from '../config/response'
-const app = new Hono()
+const route = new Hono()
 
 // Konstanta untuk Secret Key Midtrans
 const MIDTRANS_SERVER_KEY = process.env.MIDTRANS_SERVER_KEY! // Ganti dengan server key Anda
@@ -23,7 +23,7 @@ const verifyMidtransSignature = async (c: Context) => {
 }
 
 // Endpoint untuk menangani webhook dari Midtrans
-app.post('/', async (c: Context) => {
+route.post('/', async (c: Context) => {
 	// Verifikasi signature
 	if (!verifyMidtransSignature(c)) {
 		return c.json({ error: 'Invalid signature' }, 403)
@@ -38,3 +38,5 @@ app.post('/', async (c: Context) => {
 	// Berikan respons OK
 	return c.json({ message: 'Webhook received' }, 200)
 })
+
+export default route
