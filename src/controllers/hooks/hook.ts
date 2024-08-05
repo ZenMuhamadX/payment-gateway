@@ -1,8 +1,13 @@
 import { Context } from 'hono'
 import { response } from '../../config/response'
+<<<<<<< HEAD
 import { MidtransWebhookPayload } from '../../interface/inf'
 import { validateMidtransSignature } from '../../lib/verifyHooks/verifyHook'
 import { sendTxData } from '../../lib/history/sendToChains'
+=======
+const serverKey = process.env.MIDTRANS_SERVER_KEY
+import crypto from 'crypto-js'
+>>>>>>> a45759e (test verify hooks)
 
 const serverKey = process.env.MIDTRANS_SERVER_KEY
 
@@ -99,3 +104,19 @@ export const handleWebhook = async (c: Context) => {
 	}
 }
 
+<<<<<<< HEAD
+=======
+export const webHook = async (c: Context) => {
+	const hookBody: hookFromMidtrans = await c.req.json()
+	const signatureHook = hookBody.signature_key
+	const verifySignature = crypto.SHA512(
+		`${hookBody.order_id}${hookBody.status_code}${hookBody.gross_amount}${serverKey}`
+	)
+	if (signatureHook === verifySignature.toString()) {
+		console.log('Signature verified')
+	}
+	console.log({ verifySignature })
+	console.log({ signatureHook })
+	return response(c, null, 200, 'Hooks recived', { hooks: hookBody })
+}
+>>>>>>> a45759e (test verify hooks)
