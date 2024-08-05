@@ -29,12 +29,15 @@ export const handleWebhook = async (c: Context) => {
 			return response(c, null, 400, 'Invalid Signature', null)
 		}
 
+		console.log(payload)
+
 		if (payload.transaction_status === 'capture') {
 			console.log('Transaction is captured')
 			if (payload.fraud_status === 'accept') {
 				console.log('Transaction is fraud')
 				return response(c, null, 200, 'Webhook recived and valid', null)
-			} return
+			}
+			return
 			sendTxData({
 				serverKey,
 				signatureKey: signature_key,
@@ -44,8 +47,8 @@ export const handleWebhook = async (c: Context) => {
 				transactionStatus: transaction_status,
 				grossAmount: gross_amount,
 			})
-		} else if (payload.transaction_status === "settlement") {
-			console.log("Transaction is settled")
+		} else if (payload.transaction_status === 'settlement') {
+			console.log('Transaction is settled')
 		}
 		// Kirim respons 200 OK jika tidak ada masalah
 		return response(c, null, 200, 'OK', null)
