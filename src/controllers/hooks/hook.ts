@@ -18,6 +18,7 @@ export const handleWebhook = async (c: Context) => {
 			transaction_status,
 			transaction_time,
 		} = payload
+
 		const isSignatureValid = validateMidtransSignature({
 			signatureKey: signature_key,
 			orderId: order_id,
@@ -29,31 +30,72 @@ export const handleWebhook = async (c: Context) => {
 			return response(c, null, 400, 'Invalid Signature', null)
 		}
 
-		console.log(payload)
-
-		if (payload.transaction_status === 'capture') {
-			console.log('Transaction is captured')
-			if (payload.fraud_status === 'accept') {
-				console.log('Transaction is fraud')
-				return response(c, null, 200, 'Webhook recived and valid', null)
-			}
-			return
-			sendTxData({
-				serverKey,
-				signatureKey: signature_key,
-				orderId: order_id,
-				transactionId: transaction_status,
-				time: transaction_time,
-				transactionStatus: transaction_status,
-				grossAmount: gross_amount,
-			})
-		} else if (payload.transaction_status === 'settlement') {
-			console.log('Transaction is settled')
+		if (payload.fraud_status !== 'accept') {
+			return response(c, null, 400, 'Fraud Status Not Accepted', null)
 		}
-		// Kirim respons 200 OK jika tidak ada masalah
-		return response(c, null, 200, 'OK', null)
+
+		switch (payload.transaction_status) {
+			case 'capture':
+				// Handle capture status if necessary
+				console.log("Capture transaction");
+				return response(c, null, 200, 'Transaction Captured', null)
+
+			case 'settlement':
+			console.log("Settlement transaction");
+				// Handle settlement status
+				sendTxData({
+					serverKey,
+					signatureKey: signature_key,
+					orderId: order_id,
+					transactionId: transaction_status,
+					time: transaction_time,
+					transactionStatus: transaction_status,
+					grossAmount: gross_amount,
+				})
+				return response(c, null, 200, 'Transaction Success', null)
+
+			case 'pending':
+				// Handle pending status
+				console.log('Pending transaction')
+				return response(c, null, 200, 'Webhook received and valid', null)
+
+			case 'deny':
+				console.log('Deny transaction')
+				// Handle deny status
+				return response(c, null, 200, 'Transaction Denied', null)
+
+			case 'cancel':
+				console.log('Cancel transaction')
+				// Handle cancel status
+				return response(c, null, 200, 'Transaction Canceled', null)
+
+			case 'expire':
+				console.log('Expire transaction')
+				// Handle expire status
+				return response(c, null, 200, 'Transaction Expired', null)
+
+			case 'failure':
+				console.log('Failure transaction')
+				// Handle failure status
+				return response(c, null, 200, 'Transaction Failed', null)
+
+			case 'refund':
+				console.log('Refund transaction')
+				// Handle refund status
+				return response(c, null, 200, 'Transaction Refunded', null)
+
+			case 'partial_refund':
+				console.log('Partial refund transaction')
+				// Handle partial refund status
+				return response(c, null, 200, 'Transaction Partially Refunded', null)
+
+			default:
+				// Handle any unexpected statuses
+				return response(c, null, 400, 'Unhandled Transaction Status', null)
+		}
 	} catch (error) {
-		console.error('Error in handleWebhook:', error)
+		console.error('Error handling webhook:', error)
 		return response(c, null, 500, 'Internal Server Error', null)
 	}
 }
+
