@@ -44,8 +44,9 @@ export const handleWebhook = async (c: Context) => {
 				transactionStatus: transaction_status,
 				grossAmount: gross_amount,
 			})
+		} else if (payload.transaction_status === "settlement") {
+			console.log("Transaction is settled")
 		}
-
 		// Kirim respons 200 OK jika tidak ada masalah
 		return response(c, null, 200, 'OK', null)
 	} catch (error) {
