@@ -12,11 +12,6 @@ import { toStatusCode } from '../../lib/payment/convertToStatusCode'
 import { db } from '../../lib/db/db'
 //
 
-const data = db
-	.from('classProduct')
-	.select('*')
-	.eq('class_id', '547a141d-da35-4c81-885a-caf068da819c')
-console.log(data)
 // Konstanta untuk nilai tetap yang akan diambil dari database
 const GROSS_AMOUNT = 70000
 const ITEM_PRICE = 70000
@@ -40,6 +35,11 @@ export const handleSendRequestTransaction = async (
 	username: string,
 	email: string
 ): Promise<ResponseTransaction | null> => {
+	const data = await db
+		.from('classProduct')
+		.select('*')
+		.eq('class_id', '547a141d-da35-4c81-885a-caf068da819c')
+	console.log(data)
 	const orderID = generateUniqueId()
 	try {
 		// Mendefinisikan data transaksi (akan diambil dari database)
