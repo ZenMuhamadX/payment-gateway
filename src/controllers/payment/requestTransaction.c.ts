@@ -35,11 +35,15 @@ export const handleSendRequestTransaction = async (
 	username: string,
 	email: string
 ): Promise<ResponseTransaction | null> => {
-	const data = await db
+	const { data, error, status, statusText } = await db
 		.from('classProduct')
 		.select('*')
-		.eq('class_id', '547a141d-da35-4c81-885a-caf068da819c')
-	console.log(data)
+		.eq('class_id', `${idProduk}`)
+		console.log(data);
+		console.log(data?.id);
+		data?.map((item) => {
+			console.log(item.id);
+		})
 	const orderID = generateUniqueId()
 	try {
 		// Mendefinisikan data transaksi (akan diambil dari database)
