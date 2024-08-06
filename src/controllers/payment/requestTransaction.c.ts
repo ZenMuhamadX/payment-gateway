@@ -12,15 +12,6 @@ import { toStatusCode } from '../../lib/payment/convertToStatusCode'
 import { getDataById } from '../../lib/db/getDataById'
 //
 
-// Konstanta untuk nilai tetap yang akan diambil dari database
-const GROSS_AMOUNT = 70000
-const ITEM_PRICE = 70000
-const ITEM_QUANTITY = 1
-const BRAND = 'x'
-const ITEM_NAME = 'Midtrans Bear'
-const MERCHANT_NAME = 'Midtrans'
-//
-
 interface ResponseTransaction {
 	orderID?: string
 	token?: string
@@ -42,8 +33,16 @@ export const handleSendRequestTransaction = async (
 		return { error: product.error, statusCode: product.statusCode }
 	}
 
-console.log(product);
-return null;
+	console.log(product.data)
+
+	// Konstanta untuk nilai tetap yang akan diambil dari database
+	const GROSS_AMOUNT = product.data.price
+	const ITEM_PRICE = product.data.price
+	const ITEM_QUANTITY = 1
+	const BRAND = "Fii product"
+	const ITEM_NAME = product.data.title
+	const MERCHANT_NAME = product.data.merchant_name
+	//
 
 	const orderID = generateUniqueId()
 	try {
@@ -51,7 +50,7 @@ return null;
 		const txData: TransactionData = {
 			transaction_details: {
 				order_id: orderID,
-				gross_amount: 20000,
+				gross_amount: GROSS_AMOUNT,
 			},
 			item_details: [
 				{
