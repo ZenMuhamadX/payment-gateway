@@ -1,7 +1,6 @@
 {
   "name": "paymentGateway",
   "scripts": {
-    "lint": "eslint ./src/**/*.ts",
     "dev": "bun run --watch src/server.dev.ts"
   },
   "dependencies": {

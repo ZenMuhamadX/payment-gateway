@@ -8,7 +8,6 @@ import { prettyJSON } from 'hono/pretty-json'
 import { secureHeaders } from 'hono/secure-headers'
 import { csrf } from 'hono/csrf'
 import { requestId } from 'hono/request-id'
-// import { logger } from 'hono/logger'
 import { logger } from './middleware/logger.mid'
 
 // routing module
@@ -28,8 +27,8 @@ app.use(
 		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Metode HTTP yang diizinkan
 	})
 )
-app.use(csrf())
 app.use(secureHeaders())
+app.use(csrf())
 app.use(logger)
 app.use(requestId())
 app.use(prettyJSON())

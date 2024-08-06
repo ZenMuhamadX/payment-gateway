@@ -9,8 +9,14 @@ import { generateUniqueId } from '../../lib/id/generateId.lib'
 import { StatusCode } from 'hono/utils/http-status'
 import { midtransError } from '../../interface/inf'
 import { toStatusCode } from '../../lib/payment/convertToStatusCode'
+import { db } from '../../lib/db/db'
 //
 
+const data = db
+	.from('classProduct')
+	.select('*')
+	.eq('class_id', '547a141d-da35-4c81-885a-caf068da819c')
+console.log(data)
 // Konstanta untuk nilai tetap yang akan diambil dari database
 const GROSS_AMOUNT = 70000
 const ITEM_PRICE = 70000
