@@ -9,7 +9,7 @@ import { generateUniqueId } from '../../lib/id/generateId.lib'
 import { StatusCode } from 'hono/utils/http-status'
 import { midtransError } from '../../interface/inf'
 import { toStatusCode } from '../../lib/payment/convertToStatusCode'
-import { db } from '../../lib/db/db'
+import { getDataById } from '../../lib/db/getDataById'
 //
 
 // Konstanta untuk nilai tetap yang akan diambil dari database
@@ -26,7 +26,7 @@ interface ResponseTransaction {
 	token?: string
 	redirect_url?: string
 	error?: string
-	statusCode?: StatusCode
+	statusCode?: StatusCode | number
 }
 
 // Fungsi request transaksi
@@ -35,22 +35,23 @@ export const handleSendRequestTransaction = async (
 	username: string,
 	email: string
 ): Promise<ResponseTransaction | null> => {
-	const { data, error, status, statusText } = await db
-		.from('classProduct')
-		.select('*')
-		.eq('class_id', `${idProduk}`)
-		console.log(data);
-		console.log(data?.id);
-		data?.map((item) => {
-			console.log(item.id);
-		})
+	const product = await getDataById(idProduk)
+	if (product.error) {
+		return { error: product.error, statusCode: product.statusCode }
+	} else if (!product.data) {
+		return { error: product.error, statusCode: product.statusCode }
+	}
+
+console.log(product);
+return null;
+
 	const orderID = generateUniqueId()
 	try {
 		// Mendefinisikan data transaksi (akan diambil dari database)
 		const txData: TransactionData = {
 			transaction_details: {
 				order_id: orderID,
-				gross_amount: GROSS_AMOUNT,
+				gross_amount: 20000,
 			},
 			item_details: [
 				{
