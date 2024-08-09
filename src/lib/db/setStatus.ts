@@ -15,4 +15,7 @@ export const setStatus = async (hooksPayload: MidtransWebhookPayload) => {
 			settlement_time: hooksPayload.settlement_time,
 		})
 	console.log(data)
+	console.log(error)
+	console.log(status)
+	console.log(statusText)
 }
