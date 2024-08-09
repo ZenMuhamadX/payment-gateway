@@ -2,6 +2,10 @@ import { MidtransWebhookPayload } from '../../interface/inf'
 import { db } from './db'
 
 export const setStatus = async (hooksPayload: MidtransWebhookPayload) => {
+	let valid
+	if (hooksPayload.fraud_status === 'accept') {
+		valid = true
+	} else valid = false
 	const { data, error, status, statusText } = await db
 		.from('statusPayment')
 		.insert({
@@ -13,6 +17,7 @@ export const setStatus = async (hooksPayload: MidtransWebhookPayload) => {
 			signature: hooksPayload.signature_key,
 			transaction_time: hooksPayload.transaction_time,
 			settlement_time: hooksPayload.settlement_time,
+			valid: valid,
 		})
 	console.log(data)
 	console.log(error)
