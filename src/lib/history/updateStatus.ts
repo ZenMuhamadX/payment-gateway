@@ -21,7 +21,7 @@ export const updateStatus = async (
 				transaction_id: hooksPayload.transaction_id,
 				status: hooksPayload.transaction_status,
 				price: hooksPayload.gross_amount,
-				curency: hooksPayload.currency,
+				currency: hooksPayload.currency,
 				signature: hooksPayload.signature_key,
 				transaction_time: hooksPayload.transaction_time,
 				settlement_time: hooksPayload.settlement_time,
