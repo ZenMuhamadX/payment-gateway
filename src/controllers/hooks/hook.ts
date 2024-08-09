@@ -2,7 +2,6 @@ import { Context } from 'hono'
 import { response } from '../../config/response'
 import { MidtransWebhookPayload } from '../../interface/inf'
 import { validateMidtransSignature } from '../../lib/verifyHooks/verifyHook'
-import { setStatus } from '../../lib/history/setStatus'
 import { updateStatus } from '../../lib/history/updateStatus'
 // import { sendTxData } from '../../lib/history/sendToChains'
 
@@ -31,9 +30,11 @@ export const handleWebhook = async (c: Context) => {
 		})
 
 		if (!isSignatureValid) {
+			console.log('invalid Signature')
 			return response(c, null, 400, 'Invalid Signature', null)
 		}
 		if (payload.fraud_status !== 'accept') {
+			console.log('Fraud Status Not Accepted')
 			return response(c, null, 400, 'Fraud Status Not Accepted', null)
 		}
 
