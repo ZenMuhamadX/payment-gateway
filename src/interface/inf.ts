@@ -8,6 +8,12 @@ export interface JwtVerificationResult {
 	data?: object | string
 }
 
+export interface returnResponseStanard {
+	status: string
+	error?: string
+	data: any
+}
+
 // TransactionData
 interface TransactionDetails {
 	order_id: string
