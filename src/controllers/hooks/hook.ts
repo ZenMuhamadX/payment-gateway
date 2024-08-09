@@ -2,7 +2,8 @@ import { Context } from 'hono'
 import { response } from '../../config/response'
 import { MidtransWebhookPayload } from '../../interface/inf'
 import { validateMidtransSignature } from '../../lib/verifyHooks/verifyHook'
-import { sendTxData } from '../../lib/history/sendToChains'
+import { setStatus } from '../../lib/db/setStatus'
+// import { sendTxData } from '../../lib/history/sendToChains'
 
 const serverKey = process.env.MIDTRANS_SERVER_KEY
 
@@ -18,6 +19,8 @@ export const handleWebhook = async (c: Context) => {
 			transaction_status,
 			transaction_time,
 		} = payload
+
+		console.log(payload)
 
 		const isSignatureValid = validateMidtransSignature({
 			signatureKey: signature_key,
@@ -43,20 +46,20 @@ export const handleWebhook = async (c: Context) => {
 			case 'settlement':
 				console.log('Settlement transaction')
 				// Handle settlement status
-				sendTxData({
-					serverKey,
-					signatureKey: signature_key,
-					orderId: order_id,
-					transactionId: transaction_status,
-					time: transaction_time,
-					transactionStatus: transaction_status,
-					grossAmount: gross_amount,
-				})
+				// sendTxData({
+				// 	serverKey,
+				// 	signatureKey: signature_key,
+				// 	orderId: order_id,
+				// 	transactionId: transaction_status,
+				// 	time: transaction_time,
+				// 	transactionStatus: transaction_status,
+				// 	grossAmount: gross_amount,
+				// })
 				return response(c, null, 200, 'Transaction Success', null)
 
 			case 'pending':
 				// Handle pending status
-				console.log('Pending transaction')
+				setStatus(payload)
 				return response(c, null, 200, 'Webhook received and valid', null)
 
 			case 'deny':
