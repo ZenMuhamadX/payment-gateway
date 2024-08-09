@@ -14,6 +14,7 @@ export const requestClient = Joi.object({
 	id_produk: Joi.string().required(),
 	username: Joi.string().required(),
 	email: Joi.string().email().required(),
+	signature: Joi.string().required(),
 })
 
 // Detail Transaction
