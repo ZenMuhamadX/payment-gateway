@@ -22,13 +22,18 @@ export const updateStatus = async (
 				status: hooksPayload.transaction_status,
 				price: hooksPayload.gross_amount,
 				curency: hooksPayload.currency,
-				signature:hooksPayload.signature_key,
+				signature: hooksPayload.signature_key,
 				transaction_time: hooksPayload.transaction_time,
 				settlement_time: hooksPayload.settlement_time,
 				payment_type: hooksPayload.payment_type,
 				valid: valid,
 			})
 			.eq('order_id', hooksPayload.order_id)
+
+		console.log(error)
+		console.log(data)
+		console.log(statusText)
+
 		return {
 			status: statusText,
 			error: error?.message,
