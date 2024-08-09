@@ -1,5 +1,6 @@
-import { Context } from 'hono'
+import { Context, Next } from 'hono'
 import crypto from 'crypto'
+import { response } from '../config/response'
 
 interface requestClient {
 	id_produk: string
@@ -8,14 +9,17 @@ interface requestClient {
 	signature: string
 }
 
-export const checkSign = async (c: Context) => {
+export const checkSign = async (c: Context, next: Next) => {
 	const clientData: requestClient = await c.req.json()
 	const secretKey = process.env.JWT_SECRET_KEY
 	const signatureFrontEnd = clientData.signature
-	const isValidSign = crypto
+	const validSign = crypto
 		.createHash('sha256')
 		.update(clientData.username + clientData.email + secretKey)
 		.digest('hex')
-	console.log(clientData)
-	console.log(isValidSign)
+	if (signatureFrontEnd === validSign) {
+		return await next()
+	} else {
+		return response(c, 'Invalid Signature', 400, 'Bad Request')
+	}
 }
