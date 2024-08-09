@@ -8,7 +8,7 @@ interface requestClient {
 	signature: string
 }
 
-const checkSign = async (c: Context) => {
+export const checkSign = async (c: Context) => {
 	const clientData: requestClient = await c.req.json()
 	const signatureFrontEnd = clientData.signature
 	const isValidSign = crypto
