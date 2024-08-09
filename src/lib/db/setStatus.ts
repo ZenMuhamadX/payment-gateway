@@ -1,11 +1,15 @@
 import { MidtransWebhookPayload } from '../../interface/inf'
+import { validateMidtransSignature } from '../verifyHooks/verifyHook'
 import { db } from './db'
 
 export const setStatus = async (hooksPayload: MidtransWebhookPayload) => {
-	let valid
-	if (hooksPayload.fraud_status === 'accept') {
-		valid = true
-	} else valid = false
+	const valid = validateMidtransSignature({
+		signatureKey: hooksPayload.signature_key,
+		orderId: hooksPayload.order_id,
+		statusCode: hooksPayload.status_code,
+		grossAmount: hooksPayload.gross_amount,
+	})
+
 	const { data, error, status, statusText } = await db
 		.from('statusPayment')
 		.insert({

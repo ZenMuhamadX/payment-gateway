@@ -8,7 +8,7 @@ interface signaturePayload {
 	grossAmount: string
 }
 
-export const validateMidtransSignature = (payload: signaturePayload) => {
+export const validateMidtransSignature = (payload: signaturePayload):boolean => {
 	const serverKey = process.env.MIDTRANS_SERVER_KEY!
 	const { signatureKey, orderId, statusCode, grossAmount } = payload
 	const computedSignature = crypto

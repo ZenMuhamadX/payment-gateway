@@ -44,7 +44,6 @@ export const handleWebhook = async (c: Context) => {
 				return response(c, null, 200, 'Transaction Captured', null)
 
 			case 'settlement':
-				setStatus(payload)
 				console.log('Settlement transaction')
 				// Handle settlement status
 				// sendTxData({
