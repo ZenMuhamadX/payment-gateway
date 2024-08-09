@@ -15,7 +15,7 @@ export const updateStatus = async (
 		grossAmount: hooksPayload.gross_amount,
 	})
 	try {
-		const { statusText, data, error } = await db
+		const { statusText, error } = await db
 			.from('statusPayment')
 			.update({
 				transaction_id: hooksPayload.transaction_id,
@@ -30,14 +30,12 @@ export const updateStatus = async (
 			})
 			.eq('order_id', hooksPayload.order_id)
 
-		console.log(error)
-		console.log(data)
-		console.log(statusText)
+		console.log({ error, statusText })
 
 		return {
 			status: statusText,
 			error: error?.message,
-			data,
+			data: null,
 		}
 	} catch (error) {
 		console.error(error)

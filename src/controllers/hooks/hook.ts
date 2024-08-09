@@ -19,9 +19,6 @@ export const handleWebhook = async (c: Context) => {
 			// transaction_status,
 			// transaction_time,
 		} = payload
-
-		console.log(payload)
-
 		const isSignatureValid = validateMidtransSignature({
 			signatureKey: signature_key,
 			orderId: order_id,
