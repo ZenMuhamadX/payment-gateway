@@ -9,21 +9,7 @@ import { generateUniqueId } from '../../lib/id/generateId.lib'
 import { StatusCode } from 'hono/utils/http-status'
 import { midtransError } from '../../interface/inf'
 import { toStatusCode } from '../../lib/payment/convertToStatusCode'
-import { db } from '../../lib/db/db'
-//
-
-const data = db
-	.from('classProduct')
-	.select('*')
-	.eq('class_id', '547a141d-da35-4c81-885a-caf068da819c')
-console.log(data)
-// Konstanta untuk nilai tetap yang akan diambil dari database
-const GROSS_AMOUNT = 70000
-const ITEM_PRICE = 70000
-const ITEM_QUANTITY = 1
-const BRAND = 'x'
-const ITEM_NAME = 'Midtrans Bear'
-const MERCHANT_NAME = 'Midtrans'
+import { getDataById } from '../../lib/db/getDataById'
 //
 
 interface ResponseTransaction {
@@ -31,7 +17,7 @@ interface ResponseTransaction {
 	token?: string
 	redirect_url?: string
 	error?: string
-	statusCode?: StatusCode
+	statusCode?: StatusCode | number
 }
 
 // Fungsi request transaksi
@@ -40,6 +26,24 @@ export const handleSendRequestTransaction = async (
 	username: string,
 	email: string
 ): Promise<ResponseTransaction | null> => {
+	const product = await getDataById(idProduk)
+	if (product.error) {
+		return { error: product.error, statusCode: product.statusCode }
+	} else if (!product.data) {
+		return { error: product.error, statusCode: product.statusCode }
+	}
+
+	console.log(product.data)
+
+	// Konstanta untuk nilai tetap yang akan diambil dari database
+	const GROSS_AMOUNT = product.data.price
+	const ITEM_PRICE = product.data.price
+	const ITEM_QUANTITY = 1
+	const BRAND = "Fii product"
+	const ITEM_NAME = product.data.title
+	const MERCHANT_NAME = product.data.merchant_name
+	//
+
 	const orderID = generateUniqueId()
 	try {
 		// Mendefinisikan data transaksi (akan diambil dari database)
