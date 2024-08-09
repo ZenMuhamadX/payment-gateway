@@ -59,7 +59,7 @@ export const handleWebhook = async (c: Context) => {
 
 			case 'pending':
 				// Handle pending status
-				setStatus(payload)
+				updateStatus(payload)
 				return response(c, null, 200, 'Webhook received and valid', null)
 
 			case 'deny':

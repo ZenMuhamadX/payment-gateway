@@ -10,6 +10,7 @@ import { StatusCode } from 'hono/utils/http-status'
 import { midtransError } from '../../interface/inf'
 import { toStatusCode } from '../../lib/payment/convertToStatusCode'
 import { getDataById } from '../../lib/db/getDataById'
+import { setStatus } from '../../lib/history/setStatus'
 //
 
 interface ResponseTransaction {
@@ -33,13 +34,11 @@ export const handleSendRequestTransaction = async (
 		return { error: product.error, statusCode: product.statusCode }
 	}
 
-	console.log(product.data)
-
 	// Konstanta untuk nilai tetap yang akan diambil dari database
 	const GROSS_AMOUNT = product.data.price
 	const ITEM_PRICE = product.data.price
 	const ITEM_QUANTITY = 1
-	const BRAND = "Fii product"
+	const BRAND = product.data.brand
 	const ITEM_NAME = product.data.title
 	const MERCHANT_NAME = product.data.merchant_name
 	//
@@ -82,6 +81,7 @@ export const handleSendRequestTransaction = async (
 		const transaction = await snap.createTransaction(value)
 		const redirect_url = transaction.redirect_url
 		const token = transaction.token
+		setStatus({ price: ITEM_PRICE, order_id: orderID,email:email,username:username })
 		return { token, redirect_url, orderID, statusCode: 200 }
 	} catch (error) {
 		if (error instanceof Error) {

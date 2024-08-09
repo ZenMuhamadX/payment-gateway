@@ -14,6 +14,7 @@ interface ReturnDataFromDatabase {
 	price: number
 	created_at: string
 	merchant_name: string
+	brand: string
 }
 
 export const getDataById = async (
