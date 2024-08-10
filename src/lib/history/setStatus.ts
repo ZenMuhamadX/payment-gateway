@@ -6,6 +6,7 @@ interface payload {
 	price: number
 	username: string
 	email: string
+	url_payment: string
 }
 
 export const setStatus = async (
@@ -18,6 +19,7 @@ export const setStatus = async (
 			order_id: payload.order_id,
 			price: payload.price,
 			status: 'waiting',
+			url_payment: payload.url_payment
 		})
 		console.log({ error, statusText });
 		return { data:null, error: error?.message, status: statusText }

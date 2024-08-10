@@ -81,7 +81,13 @@ export const handleSendRequestTransaction = async (
 		const transaction = await snap.createTransaction(value)
 		const redirect_url = transaction.redirect_url
 		const token = transaction.token
-		setStatus({ price: ITEM_PRICE, order_id: orderID,email:email,username:username })
+		setStatus({
+			price: ITEM_PRICE,
+			order_id: orderID,
+			email: email,
+			username: username,
+			url_payment: redirect_url,
+		})
 		return { token, redirect_url, orderID, statusCode: 200 }
 	} catch (error) {
 		if (error instanceof Error) {
