@@ -20,9 +20,9 @@ const donationSchema = Joi.object<DonationInput>({
 
 // Fungsi untuk membuat transaksi donasi dengan Snap
 export const handleDonate = async (c: Context) => {
+  const orderId = generateUniqueId()
   try {
-    const { amount, name, email } = await c.req.json()
-    const orderId = generateUniqueId()
+    const { amount, email, name } = (await c.req.json()) as DonationInput
 
     // Validasi input
     const { error } = donationSchema.validate({ amount, name, email })
@@ -61,6 +61,6 @@ export const handleDonate = async (c: Context) => {
     })
   } catch (error) {
     console.error('Midtrans Snap error:', error)
-    return response(c, 'Something went wrong', 500, 'Internal Server Error')
+    return response(c, 'Something went wrong or invalid JSON input', 500, 'Internal Server Error')
   }
 }
