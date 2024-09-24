@@ -12,7 +12,7 @@
         <!-- Title and Header -->
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-blue-700">API Documentation: Payment Gateway</h1>
-            <p class="text-lg mt-2 text-gray-500">Base URL: <code class="font-mono bg-gray-200 p-1 rounded">https://api.zenxyz.online</code></p>
+            <p class="text-lg mt-2 text-gray-500">Base URL: <code class="font-mono bg-gray-200 p-1 rounded">https://pay.zenxyz.online</code></p>
             <p class="text-lg text-gray-500">Authentication: JWT Token</p>
         </header>
 
@@ -27,7 +27,7 @@
                 <!-- URL & Method -->
                 <div class="mb-4">
                     <p class="text-sm font-medium text-gray-500">URL:</p>
-                    <p class="font-mono bg-gray-100 p-2 rounded">https://api.zenxyz.online/v1/transaction/donate</p>
+                    <p class="font-mono bg-gray-100 p-2 rounded">https://pay.zenxyz.online/v1/transaction/donate</p>
                 </div>
 
                 <!-- Headers -->
@@ -35,7 +35,7 @@
                     <p class="text-sm font-medium text-gray-500">Headers:</p>
                     <ul class="list-disc ml-8">
                         <li><code class="font-mono bg-gray-100 p-1 rounded">Content-Type: Application/Json</code></li>
-                        <li><code class="font-mono bg-gray-100 p-1 rounded">Authorization: jwtToken</code></li>
+                        <li><code class="font-mono bg-gray-100 p-1 rounded">Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IngiLCJzZXJ2ZXIiOiJ4IiwiaWF0IjoxNzIyNzU5NjIxfQ.jnIX5AAJ_oDyQZZ-8bruvoixI9RWAllIKnN0_GrQTHU</code></li>
                     </ul>
                 </div>
 
@@ -112,7 +112,7 @@
             <pre class="bg-gray-800 text-white p-4 rounded-lg">
 &lt;?php
 // URL endpoint
-$url = 'https://api.zenxyz.online/v1/transaction/donate';
+$url = 'https://pay.zenxyz.online/v1/transaction/donate';
 
 // Data yang akan dikirim dalam request body
 $data = [
