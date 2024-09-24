@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Payment Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <div class="container mx-auto p-8">
+        <!-- Title and Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-700">API Documentation: Payment Gateway</h1>
+            <p class="text-lg mt-2 text-gray-500">Base URL: <code class="font-mono bg-gray-200 p-1 rounded">https://api.zenxyz.online</code></p>
+            <p class="text-lg text-gray-500">Authentication: JWT Token</p>
+        </header>
+
+        <!-- Endpoints Section -->
+        <section class="bg-white shadow rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-blue-600">Endpoints</h2>
+
+            <div class="mt-6">
+                <h3 class="text-xl font-semibold text-gray-700">POST /v1/transaction/donate</h3>
+                <p class="text-gray-600 mb-4">Endpoint ini digunakan untuk membuat request transaksi donasi.</p>
+
+                <!-- URL & Method -->
+                <div class="mb-4">
+                    <p class="text-sm font-medium text-gray-500">URL:</p>
+                    <p class="font-mono bg-gray-100 p-2 rounded">https://api.zenxyz.online/v1/transaction/donate</p>
+                </div>
+
+                <!-- Headers -->
+                <div class="mb-4">
+                    <p class="text-sm font-medium text-gray-500">Headers:</p>
+                    <ul class="list-disc ml-8">
+                        <li><code class="font-mono bg-gray-100 p-1 rounded">Content-Type: Application/Json</code></li>
+                        <li><code class="font-mono bg-gray-100 p-1 rounded">Authorization: jwtToken</code></li>
+                    </ul>
+                </div>
+
+                <!-- Request Body -->
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-700">Request Body</h4>
+                    <p class="text-gray-600">Format request body menggunakan JSON dengan parameter yang wajib sebagai berikut:</p>
+                    <ul class="list-disc ml-8 mt-2">
+                        <li><strong>amount</strong> (number) - Jumlah yang akan didonasikan.</li>
+                        <li><strong>name</strong> (string) - Nama pemberi donasi.</li>
+                        <li><strong>email</strong> (string) - Alamat email pemberi donasi.</li>
+                    </ul>
+                </div>
+
+                <!-- Example Request Body -->
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-700">Contoh Request Body</h4>
+                    <pre class="bg-gray-800 text-white p-4 rounded-lg">
+{
+    "amount": 20000,
+    "name": "zen",
+    "email": "xxx@gmx.com"
+}
+                    </pre>
+                </div>
+
+                <!-- Response -->
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-700">Response</h4>
+                    <p class="text-gray-600">Respons dari API menggunakan format JSON dengan struktur sebagai berikut:</p>
+                    <pre class="bg-gray-800 text-white p-4 rounded-lg">
+{
+    "Payload": {
+        "requestId": "string",
+        "statusCode": number,
+        "statusText": "string",
+        "response": {
+            "token": "string",
+            "url_payment": "string"
+        }
+    }
+}
+                    </pre>
+                </div>
+
+                <!-- Example Response -->
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-700">Contoh Response</h4>
+                    <pre class="bg-gray-800 text-white p-4 rounded-lg">
+{
+    "Payload": {
+        "requestId": "abc12345",
+        "statusCode": 200,
+        "statusText": "Success",
+        "response": {
+            "token": "xyz987",
+            "url_payment": "https://paymentgateway.com/pay/xyz987"
+        }
+    }
+}
+                    </pre>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PHP Implementation -->
+        <section class="bg-white shadow rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-blue-600">PHP Implementation</h2>
+
+            <p class="text-gray-600 mb-4">Berikut adalah contoh implementasi request API ini menggunakan bahasa PHP beserta header dan request body:</p>
+
+            <!-- PHP Example -->
+            <pre class="bg-gray-800 text-white p-4 rounded-lg">
+&lt;?php
+// URL endpoint
+$url = 'https://api.zenxyz.online/v1/transaction/donate';
+
+// Data yang akan dikirim dalam request body
+$data = [
+    "amount" => 20000,
+    "name" => "zen",
+    "email" => "xxx@gmx.com"
+];
+
+// Encode data ke format JSON
+$json_data = json_encode($data);
+
+// JWT token untuk otentikasi (ganti dengan JWT token yang valid)
+$jwtToken = 'your_jwt_token_here';
+
+// Header yang digunakan
+$headers = [
+    'Authorization: ' . $jwtToken, // JWT token
+    'Content-Type: application/json', // Format konten JSON
+    'Content-Length: ' . strlen($json_data) // Panjang dari body JSON
+];
+
+// Inisialisasi cURL
+$ch = curl_init($url);
+
+// Setel opsi cURL
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+
+// Eksekusi request dan ambil respons
+$response = curl_exec($ch);
+
+// Cek jika terjadi kesalahan
+if (curl_errno($ch)) {
+    echo 'Error:' . curl_error($ch);
+} else {
+    // Menampilkan response
+    echo 'Response: ' . $response;
+}
+
+// Tutup cURL
+curl_close($ch);
+?>
+            </pre>
+        </section>
+
+        <!-- Rate Limiting Section -->
+        <section class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-2xl font-semibold text-blue-600">Rate Limiting</h2>
+            <p class="text-gray-600 mt-2">Tidak ada rate limit yang diterapkan untuk API ini.</p>
+        </section>
+    </div>
+
+</body>
+</html>
