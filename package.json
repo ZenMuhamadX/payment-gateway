@@ -40,7 +40,7 @@
     "bun-types": "latest"
   },
   "module": "index.ts",
-  "type": "module",
+  "type": "commonjs",
   "peerDependencies": {
     "typescript": "^5.0.0"
   }
