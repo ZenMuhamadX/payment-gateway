@@ -15,6 +15,7 @@ import index from './route'
 import createPayment from './route/transaction'
 import createJwt from './route/createJwt'
 import hooks from './route/hooks'
+import donate from './route/donate'
 
 // Instansi app
 const app = new Hono()
@@ -38,6 +39,7 @@ app.route('/', index)
 app.route('/v1/hooks', hooks)
 app.route('/v1/token', createJwt)
 app.route('/v1/transaction', createPayment)
+app.route('/v1/transaction/donate',donate)
 
 // Not Found response
 app.notFound((c: Context) => {
